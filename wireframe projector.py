@@ -1,25 +1,26 @@
-#libraries
+# 15/11/24 3D WireFrame Projector
+# libraries
 import turtle
 import numpy as np
 
-#functions
 
-#Function that peforms linear transformations on given object
-#takes input xyz, which if is a rotation represents the boolean value of which axis the object is being rotated parallel to
-#if transformation is a dilation the x value will be whether it is enlarged (1) or shrunk (-1)
-#if its a translation, it is the translation vector
-#theta is only use if a rotation, it is the radians the object is being transformed by
-#transformType represents whether a translation, rotation or dilation
 
-def transformObject(x,y,z,theta,transformType):
 
-    #access the vertices, object type (eg cube,cuboid) and size/scale of object
-    global vertices, objectType, scale
+# takes input xyz, which if is a rotation represents the boolean value of which axis the object is being rotated parallel to
+# if transformation is a dilation the x value will be whether it is enlarged (1) or shrunk (-1)
+# if its a translation, it is the translation vector
+# theta is only use if a rotation, it is the radians the object is rotated anticlockwise around the origin
+# transform_type represents whether a translation, rotation or dilation
 
-    #check type of transformation
-    if transformType=="rotate":
+def transform_object(x,y,z,theta,transform_type):
 
-        #if rotate then check if parallel to xyz axis
+    # access the vertices, object type (eg cube,cuboid) and size/scale of object
+    global vertices, object_type, scale
+
+    # check type of transformation
+    if transform_type=="rotate":
+
+        # if rotation then check if parallel to xyz axis
 
         if x==True:
             transform=np.array([
@@ -42,22 +43,21 @@ def transformObject(x,y,z,theta,transformType):
             [0, 0, 1]
         ])
     
-        #apply transformation to vertices
-        vertices=np.dot(vertices,transform.T)
+        vertices=np.dot(vertices,transform.T) # apply transformation to vertices
 
-    #if translation, add translation vector to vertices
+    # if translation, add translation vector to vertices
 
-    if transformType=="translate":
+    if transform_type=="translate":
         transform=np.array([x,y,z
         ])
         vertices=vertices+transform
     
-    #if dilate then scale object back to unit object, then dilate it by scale factor given
-    if transformType=="dilate":
+    # if dilation then scale object back to unit object, then dilate it by scale factor given
+    if transform_type=="dilate":
 
         scaleFactor=x
          
-        #make sure scale is not <2 otherwise will delete object
+        # scale must not <2 otherwise will delete object
         if not (x<0 and scale<2):
             vertices = vertices / scale
             scale+=scaleFactor
@@ -65,7 +65,7 @@ def transformObject(x,y,z,theta,transformType):
         
     
 
-    #find objects edges between each vertex
+    # find objects edges between each vertex
     generateEdges()
 
 
@@ -73,7 +73,7 @@ def generateEdges():
     
     global vertices
 
-    if objectType=="cube":
+    if object_type=="cube":
         edges = np.array([
             [vertices[0], vertices[1]],
             [vertices[1], vertices[2]],
@@ -88,7 +88,7 @@ def generateEdges():
             [vertices[2], vertices[6]],
             [vertices[3], vertices[7]]
         ])
-    elif objectType=="cuboid":
+    elif object_type=="cuboid":
         edges = np.array([
             [vertices[0], vertices[1]],  # Edge 0 to 1
             [vertices[0], vertices[2]],  # Edge 0 to 2
@@ -103,7 +103,7 @@ def generateEdges():
             [vertices[5], vertices[7]],  # Edge 5 to 7
             [vertices[6], vertices[7]]   # Edge 6 to 7
         ])
-    elif objectType=="pyramid":
+    elif object_type=="pyramid":
         edges = np.array([
             [vertices[0], vertices[1]],  # Edge 0 to 1 (Base)
             [vertices[1], vertices[3]],  # Edge 1 to 3 (Base)
@@ -115,12 +115,35 @@ def generateEdges():
             [vertices[3], vertices[4]]
             ])
     
+    elif object_type == "dodecahedron":
+        edge_indices = [
+            (0,8), (0,12), (0,16), (1,8), (1,13), (1,17),
+            (2,9), (2,12), (2,18), (3,9), (3,13), (3,19),
+            (4,10), (4,14), (4,16), (5,10), (5,15), (5,17),
+            (6,11), (6,14), (6,18), (7,11), (7,15), (7,19),
+            (8,9), (10,11), (12,14), (13,15), (16,17), (18,19)
+        ]
+        edges = np.array([[vertices[i], vertices[j]] for i, j in edge_indices])
+
+    elif object_type == "rhombic triacontahedron":
+        edge_indices = [
+            (0, 8), (0, 12), (0, 16), (1, 8), (1, 13), (1, 17),
+            (2, 9), (2, 12), (2, 18), (3, 9), (3, 13), (3, 19),
+            (4, 10), (4, 14), (4, 16), (5, 10), (5, 15), (5, 17),
+            (6, 11), (6, 14), (6, 18), (7, 11), (7, 15), (7, 19),
+            (8, 9), (10, 11), (12, 14), (13, 15), (16, 17), (18, 19),
+            (0, 4), (1, 5), (2, 6), (3, 7), (4, 8), (5, 9),
+            (6, 10), (7, 11), (12, 16), (13, 17), (14, 18), (15, 19)
+        ]
+        edges = np.array([[vertices[i], vertices[j]] for i, j in edge_indices])
+    
+
     drawObject(edges)
 
-#draw each edge
+# draw each edge
 
 def drawObject(edges):
-    object.clear()  # Clear the previous drawing
+    object.clear()  # clear the previous drawing
 
     for edge in edges:
         x1, y1 = edge[0][:2]
@@ -130,12 +153,12 @@ def drawObject(edges):
         object.pendown()
         object.goto(x2, y2)
 
-    screen.update()  # Update the screen with the new drawing
+    screen.update()  # update the screen with the new drawing
 
 
 def createObject():
-    global vertices, objectType
-    if objectType=="cube":
+    global vertices, object_type
+    if object_type=="cube":
         vertices = np.array([
             [-1, -1, -1],
             [ 1, -1, -1],
@@ -147,7 +170,7 @@ def createObject():
             [-1,  1,  1]
         ])
 
-    if objectType=="pyramid":
+    if object_type=="pyramid":
         a, h = 2, 3
 
         # Pyramid vertices (4 base corners + 1 apex)
@@ -157,7 +180,7 @@ def createObject():
         [ a,  a, 0],  # Base vertex 4
         [ 0,  0, h]]) # Apex
         
-    if objectType=="cuboid":
+    if object_type=="cuboid":
         # Dimensions of the cuboid (half-lengths along each axis)
         a, b, c = 2, 1, 3
 
@@ -170,10 +193,36 @@ def createObject():
             [ a, -b,  c],
             [ a,  b, -c],
             [ a,  b,  c]])
+    
+    elif object_type == "dodecahedron":
+        # Golden ratio
+        phi = (1 + np.sqrt(5)) / 2
+        
+        vertices = np.array([
+            [ 1,  1,  1], [-1,  1,  1], [ 1, -1,  1], [-1, -1,  1],
+            [ 1,  1, -1], [-1,  1, -1], [ 1, -1, -1], [-1, -1, -1],
+            [0,  1/phi,  phi], [0, -1/phi,  phi], [0,  1/phi, -phi], [0, -1/phi, -phi],
+            [ phi, 0,  1/phi], [-phi, 0,  1/phi], [ phi, 0, -1/phi], [-phi, 0, -1/phi],
+            [ 1/phi,  phi, 0], [-1/phi,  phi, 0], [ 1/phi, -phi, 0], [-1/phi, -phi, 0]
+        ])
+    
+    elif object_type == "rhombic triacontahedron":
+        # Golden ratio
+        phi = (1 + np.sqrt(5)) / 2
 
+        # Rhombic triacontahedron vertices
+        vertices = np.array([
+            [1, 1, 1], [-1, 1, 1], [1, -1, 1], [-1, -1, 1],
+            [1, 1, -1], [-1, 1, -1], [1, -1, -1], [-1, -1, -1],
+            [0, phi, 1/phi], [0, -phi, 1/phi], [0, phi, -1/phi], [0, -phi, -1/phi],
+            [1/phi, 0, phi], [-1/phi, 0, phi], [1/phi, 0, -phi], [-1/phi, 0, -phi],
+            [phi, 1/phi, 0], [-phi, 1/phi, 0], [phi, -1/phi, 0], [-phi, -1/phi, 0]
+        ])
 
-#object initialisation
-objectType=input("What would you like to create? A cube/pyramid/cuboid: ")
+    
+
+# object initialisation
+object_type=input("What would you like to create? A cube/pyramid/cuboid: ")
 scale=int(input("Enter the scale (1-100): "))
 print("-----object initialised-----")
 print("To view your object open up the new turtle window that has just appeared")
@@ -190,11 +239,11 @@ object.speed(0)
 screen.tracer(0)
 object.hideturtle()
 
-#create corresponding object
+# Create corresponding object
 
 createObject()
 
-#scale object 
+# Scale object 
 vertices = vertices * scale
 
 object.color("white")   # Set the color of the trail to blue
@@ -207,7 +256,7 @@ generateEdges() # generate edges and draw object
 
 
 screen.listen()
-#rotate
+# rotate
 screen.onkeypress(lambda: transformObject(True,False,False,0.1,"rotate"), "s") 
 screen.onkeyrelease(lambda: transformObject(True,False,False,0.1,"rotate"), "s")
 screen.onkeypress(lambda: transformObject(True,False,False,-0.1,"rotate"), "w")  
@@ -219,7 +268,7 @@ screen.onkeyrelease(lambda: transformObject(False,True,False,-0.1,"rotate"), "a"
 screen.onkeypress(lambda: transformObject(False,False,True,0.1,"rotate"), "v")  
 screen.onkeyrelease(lambda: transformObject(False,False,True,0.1,"rotate"), "v")  #
 
-#translate
+# translate
 screen.onkeypress(lambda: transformObject(0,1,0,0,"translate"), "Up")  
 screen.onkeyrelease(lambda: transformObject(0,1,0,0,"translate"), "Up")
 screen.onkeypress(lambda: transformObject(0,-1,0,0,"translate"), "Down")  
@@ -231,7 +280,7 @@ screen.onkeyrelease(lambda: transformObject(-1,0,0,-0.1,"translate"), "Left")
 screen.onkeypress(lambda: transformObject(0,0,1,0.1,"translate"), "m")  
 screen.onkeyrelease(lambda: transformObject(0,0,1,0.1,"translate"), "m")  
 
-#dilate
+# dilate
 screen.onkeypress(lambda: transformObject(1,0,0,0,"dilate"), "=")  
 screen.onkeypress(lambda: transformObject(-1,0,0,0,"dilate"), "-")  
 
