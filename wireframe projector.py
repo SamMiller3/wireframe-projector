@@ -257,32 +257,32 @@ generateEdges() # generate edges and draw object
 
 screen.listen()
 # rotate
-screen.onkeypress(lambda: transformObject(True,False,False,0.1,"rotate"), "s") 
-screen.onkeyrelease(lambda: transformObject(True,False,False,0.1,"rotate"), "s")
-screen.onkeypress(lambda: transformObject(True,False,False,-0.1,"rotate"), "w")  
-screen.onkeyrelease(lambda: transformObject(True,False,False,-0.1,"rotate"), "w")  
-screen.onkeypress(lambda: transformObject(False,True,False,0.1,"rotate"), "d")  
-screen.onkeyrelease(lambda: transformObject(False,True,False,0.1,"rotate"), "d")  
-screen.onkeypress(lambda: transformObject(False,True,False,-0.1,"rotate"), "a")  
-screen.onkeyrelease(lambda: transformObject(False,True,False,-0.1,"rotate"), "a")  
-screen.onkeypress(lambda: transformObject(False,False,True,0.1,"rotate"), "v")  
-screen.onkeyrelease(lambda: transformObject(False,False,True,0.1,"rotate"), "v")  #
+screen.onkeypress(lambda: transform_object(True,False,False,0.1,"rotate"), "s") 
+screen.onkeyrelease(lambda: transform_object(True,False,False,0.1,"rotate"), "s")
+screen.onkeypress(lambda: transform_object(True,False,False,-0.1,"rotate"), "w")  
+screen.onkeyrelease(lambda: transform_object(True,False,False,-0.1,"rotate"), "w")  
+screen.onkeypress(lambda: transform_object(False,True,False,0.1,"rotate"), "d")  
+screen.onkeyrelease(lambda: transform_object(False,True,False,0.1,"rotate"), "d")  
+screen.onkeypress(lambda: transform_object(False,True,False,-0.1,"rotate"), "a")  
+screen.onkeyrelease(lambda: transform_object(False,True,False,-0.1,"rotate"), "a")  
+screen.onkeypress(lambda: transform_object(False,False,True,0.1,"rotate"), "v")  
+screen.onkeyrelease(lambda: transform_object(False,False,True,0.1,"rotate"), "v")  #
 
 # translate
-screen.onkeypress(lambda: transformObject(0,1,0,0,"translate"), "Up")  
-screen.onkeyrelease(lambda: transformObject(0,1,0,0,"translate"), "Up")
-screen.onkeypress(lambda: transformObject(0,-1,0,0,"translate"), "Down")  
-screen.onkeyrelease(lambda: transformObject(0,-1,0,0,"translate"), "Down")  
-screen.onkeypress(lambda: transformObject(1,0,0,0,"translate"), "Right")  
-screen.onkeyrelease(lambda: transformObject(1,0,0,0.1,"translate"), "Right")  
-screen.onkeypress(lambda: transformObject(-1,0,0,-0.1,"translate"), "Left")  
-screen.onkeyrelease(lambda: transformObject(-1,0,0,-0.1,"translate"), "Left")  
-screen.onkeypress(lambda: transformObject(0,0,1,0.1,"translate"), "m")  
-screen.onkeyrelease(lambda: transformObject(0,0,1,0.1,"translate"), "m")  
+screen.onkeypress(lambda: transform_object(0,1,0,0,"translate"), "Up")  
+screen.onkeyrelease(lambda: transform_object(0,1,0,0,"translate"), "Up")
+screen.onkeypress(lambda: transform_object(0,-1,0,0,"translate"), "Down")  
+screen.onkeyrelease(lambda: transform_object(0,-1,0,0,"translate"), "Down")  
+screen.onkeypress(lambda: transform_object(1,0,0,0,"translate"), "Right")  
+screen.onkeyrelease(lambda: transform_object(1,0,0,0.1,"translate"), "Right")  
+screen.onkeypress(lambda: transform_object(-1,0,0,-0.1,"translate"), "Left")  
+screen.onkeyrelease(lambda: transform_object(-1,0,0,-0.1,"translate"), "Left")  
+screen.onkeypress(lambda: transform_object(0,0,1,0.1,"translate"), "m")  
+screen.onkeyrelease(lambda: transform_object(0,0,1,0.1,"translate"), "m")  
 
 # dilate
-screen.onkeypress(lambda: transformObject(1,0,0,0,"dilate"), "=")  
-screen.onkeypress(lambda: transformObject(-1,0,0,0,"dilate"), "-")  
+screen.onkeypress(lambda: transform_object(1,0,0,0,"dilate"), "=")  
+screen.onkeypress(lambda: transform_object(-1,0,0,0,"dilate"), "-")  
 
 # Keep the window open and responsive
 screen.mainloop()
